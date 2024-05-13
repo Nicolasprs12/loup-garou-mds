@@ -3,8 +3,6 @@ import "./App.css";
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Cookies from "js-cookie";
-
 import Home from "./views/Home";
 import Join from "./views/Join";
 import Game from "./views/Game";
@@ -16,31 +14,13 @@ import Footer from "./components/Footer";
 import Chat from "./components/Chat";
 
 const App = () => {
-  const [userSession, setUserSession] = useState(
-    localStorage.getItem("user_ref_lpMds")
-      ? JSON.parse(localStorage.getItem("user_ref_lpMds"))
-      : null
-  );
-
-  const setUser = async (token, userId, username) => {
-    if (token && userId) {
-      localStorage.setItem(
-        "user_ref_lpMds",
-        JSON.stringify({ token, id: userId, username }),
-        {
-          expires: 1,
-        }
-      );
-
-      setUserSession({ token, userId, username });
-    } else {
-      localStorage.removeItem("user_ref_lpMds");
-      setUserSession(null);
-    }
-  };
   return (
     <Router>
+<<<<<<< HEAD
       <HeaderHome setUser={setUser} userSession={userSession} />
+=======
+      <HeaderHome />
+>>>>>>> 81ac92bdcfb6b3e61ff2a8f3ba408c5f48b59664
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route path="/Join" element={<Join />} />

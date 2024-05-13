@@ -18,7 +18,12 @@ mongoose
     console.error("error mongo: ", e);
   });
 
+<<<<<<< HEAD
   const app = express();
+=======
+const app = express();
+const PORT = process.env.PORT || 4000;
+>>>>>>> 81ac92bdcfb6b3e61ff2a8f3ba408c5f48b59664
 
 app.use(bodyParser.json());
 
@@ -30,7 +35,28 @@ app.use("/users", usersRoutes);
 app.use("/game/:idUser", gameRoutes);
 
 
-app.listen(process.env.PORT || 4000, () => {
+const http = require("http");
+const socketIo = require("socket.io");
+
+const server = http.createServer(app);
+const io = socketIo(server);
+
+// Middleware pour servir les fichiers statiques
+app.use(express.static("public"));
+
+io.on("connection", (socket) => {
+  console.log("Nouvel utilisateur connecté");
+
+  socket.on("sendMessage", (message) => {
+    io.emit("receiveMessage", message);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Utilisateur déconnecté");
+  });
+});
+
+app.listen(PORT, () => {
   console.log(`Server launched on PORT : ${process.env.PORT || 4000}. 🦒`);
 });
 
