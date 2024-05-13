@@ -18,27 +18,23 @@ mongoose
     console.error("error mongo: ", e);
   });
 
-const app = express();
+  const app = express();
 
 app.use(bodyParser.json());
 
-const corsOptions = {
+app.use(cors({
   origin: "*",
-};
-
-app.use(cors(corsOptions));
+}));
 
 app.use("/users", usersRoutes);
 app.use("/game/:idUser", gameRoutes);
 
-app.get("/", async (req, res) => {
-  res.json("Page Introuvable");
-});
 
 app.listen(process.env.PORT || 4000, () => {
   console.log(`Server launched on PORT : ${process.env.PORT || 4000}. 🦒`);
 });
 
+// socket io
 const http = require("http");
 const socketIo = require("socket.io");
 
@@ -48,19 +44,12 @@ const io = socketIo(server);
 // Middleware pour servir les fichiers statiques
 app.use(express.static("public"));
 
-io.on("connection", (socket) => {
-  console.log("Nouvel utilisateur connecté");
+io.on('connection', (socket) => {
+  console.log('a new user connected')
+})
 
-  socket.on("sendMessage", (message) => {
-    io.emit("receiveMessage", message);
-  });
+const PORT = 3000;
 
-  socket.on("disconnect", () => {
-    console.log("Utilisateur déconnecté");
-  });
-});
-
-const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`Serveur écoute sur le port ${PORT}`);
+  console.log(`Serveur socket.io sur le port ${PORT}`);
 });
