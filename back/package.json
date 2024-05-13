@@ -14,11 +14,8 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-<<<<<<< HEAD
     "express-session": "^1.18.0",
-=======
     "express-validator": "^7.0.1",
->>>>>>> 81ac92bdcfb6b3e61ff2a8f3ba408c5f48b59664
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.0",
     "nodemon": "^3.1.0",
