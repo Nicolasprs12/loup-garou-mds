@@ -29,7 +29,11 @@ app.use(cors({
 app.use("/users", usersRoutes);
 app.use("/game/:idUser", gameRoutes);
 
-app.listen(PORT, () => {
+app.get("*", (req, res) => {
+  res.send("hello")
+})
+
+app.listen(4000, () => {
   console.log(`Server launched on PORT : ${process.env.PORT || 4000}. 🦒`);
 });
 
