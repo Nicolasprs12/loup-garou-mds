@@ -16,7 +16,7 @@ const ViewGames = () => {
                 console.error('Error fetching products:', error);
             }
         };
-
+        
         fetchProducts();
     }, []);
 
