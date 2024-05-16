@@ -51,7 +51,7 @@ io.on('connection', (socket) => {
   console.log('a new user connected')
 })
 
-const PORT = 3000;
+const PORT = 4040;
 
 server.listen(PORT, () => {
   console.log(`Serveur socket.io sur le port ${PORT}`);

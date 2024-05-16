@@ -19,16 +19,11 @@ const Chat = () => {
   }, []);
 
   const handleSendMessage = () => {
-<<<<<<< HEAD
     if (newMessage.trim()) {
       socket.emit("sendMessage", newMessage);
       setNewMessage("");
     }
     if (newMessage.trim() !== "") {
-=======
-    if (newMessage.trim() !== "") {
-      socket.emit("sendMessage", newMessage);
->>>>>>> 81ac92bdcfb6b3e61ff2a8f3ba408c5f48b59664
       setMessages([...messages, { text: newMessage, sender: "user" }]);
       setNewMessage("");
     }

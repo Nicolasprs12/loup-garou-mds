@@ -5,7 +5,7 @@ const socket = io('http://localhost:3000');
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
-  const [message, setMessage] = useState('');
+  const [newMessage, setNewMessage] = useState('');
 
   useEffect(() => {
     socket.on('receiveMessage', (newMessage) => {

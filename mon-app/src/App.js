@@ -16,11 +16,7 @@ import Chat from "./components/Chat";
 const App = () => {
   return (
     <Router>
-<<<<<<< HEAD
-      <HeaderHome setUser={setUser} userSession={userSession} />
-=======
       <HeaderHome />
->>>>>>> 81ac92bdcfb6b3e61ff2a8f3ba408c5f48b59664
       <Routes>
         <Route exact path="/" element={<Home />} />
         <Route path="/Join" element={<Join />} />
