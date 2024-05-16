@@ -39,15 +39,18 @@ const Account = () => {
   useEffect(() => {
     fetchGameList();
   }, []);
+  const [error, setError] = useState('');
 
   const [creationStatus, setCreationStatus] = useState(false);
   const navigate = useNavigate();
   const GameItem = ({ status, id, infoPlayer }) => {
     const [itemModal, setItemModal] = useState(false);
-
     const handleClick = () => {
       if (status === "privé") {
         setItemModal(true);
+      } else {
+        // handle join
+        handleJoin(status, id)
       }
     };
 
@@ -59,14 +62,17 @@ const Account = () => {
           .concat(idUser)
           .concat("/join/")
           .concat(idGame);
-        console.log("url handleJoin", url_server);
+
         const responseUserData = await requestManager(url_server, "POST", {
           private: statusGame,
           password: joinPassword,
         });
-        console.log("handleJoin", responseUserData);
         if (responseUserData.isSuccess) {
           navigate(`/game/${responseUserData.response.game_id}`);
+        } else {
+            setError(responseUserData.message)
+            console.error(error)
+            alert(error)
         }
       } catch (e) {
         console.log(e.message);
@@ -81,7 +87,7 @@ const Account = () => {
             <span className="idgame">
               {id ? "game #".concat(id) : "game #01"}
             </span>
-            <span>/ Status {status ? status : "(privé/public)"}</span>
+            <span> / Status {status ? status : "(privé/public)"}</span>
           </p>
           <span>
             {infoPlayer ? infoPlayer.toString().concat("/12") : "0/12"}
@@ -96,14 +102,16 @@ const Account = () => {
           }
           children={
             <>
+              <p>
+                Rejoindre la partie #{id}/{status}
+              </p>
               <input
                 onChange={(v) => setJoinPassword(v.target.value)}
-                type={"password"}
+                type="password"
                 className={"bg-gray-200"}
                 placeholder={"mot de passe"}
               />
-
-              <button onClick={() => handleJoin("item.private", "item._id")}>
+              <button onClick={() => handleJoin(status, id)}>
                 submit
               </button>
             </>
@@ -120,6 +128,7 @@ const Account = () => {
         .concat("/game/")
         .concat(idUser)
         .concat("/create");
+
       console.log("url handleCreation", url_server);
       const responseUserData = await requestManager(url_server, "POST", {
         private: statusCreation,
