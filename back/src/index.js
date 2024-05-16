@@ -5,54 +5,34 @@ const cors = require("cors");
 
 const usersRoutes = require("./routes/users");
 const gameRoutes = require("./routes/game");
-var bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 
-const mongoose = require("mongoose");
+const connection = require('./config/connection');
+const socketIoInit = require("./config/socketIoConnection");
 
-mongoose
-  .connect(process.env.DATABASE_URI)
-  .then(() => {
-    console.log("success mongo connection");
-  })
-  .catch((e) => {
-    console.error("error mongo: ", e);
-  });
+const app = express();
 
-  const app = express();
+const corsOptions = {
+    origin: "*",
+};
 
-app.use(bodyParser.json());
+// init de la base de donnée
+connection();
+// init du server socket.io
+socketIoInit(app)
 
-app.use(cors({
-  origin: "*",
-}));
+// options de configuration
+app.use(
+    cors(corsOptions),
+    bodyParser.json(),
+    express.static("public")
+);
 
+// init des routes du project
 app.use("/users", usersRoutes);
 app.use("/game/:idUser", gameRoutes);
+app.get("*", (req, res) =>  res.json("Page Introuvable"));
 
-app.get("*", (req, res) => {
-  res.send("hello")
-})
-
-app.listen(4000, () => {
-  console.log(`Server launched on PORT : ${process.env.PORT || 4000}. 🦒`);
-});
-
-// socket io
-const http = require("http");
-const socketIo = require("socket.io");
-
-const server = http.createServer(app);
-const io = socketIo(server);
-
-// Middleware pour servir les fichiers statiques
-app.use(express.static("public"));
-
-io.on('connection', (socket) => {
-  console.log('a new user connected')
-})
-
-const PORT = 4040;
-
-server.listen(PORT, () => {
-  console.log(`Serveur socket.io sur le port ${PORT}`);
+app.listen(process.env.PORT || 4000, () => {
+    console.log(`Server launched on PORT : ${process.env.PORT || 4000}. 🦒`);
 });
