@@ -26,7 +26,7 @@ const HeaderHome = () => {
     navigate("/");
   };
 
-  useEffect(() => {}, [userSession]);
+  useEffect(() => {console.log(userSession)}, [userSession]);
 
   return (
     <header className="bg-transparent fixed w-full flex justify-between items-center py-4 px-6">
@@ -47,7 +47,7 @@ const HeaderHome = () => {
         <div className="flex items-center">
           {userSession.username && userSession.id && (
             <Link
-              to={`/Account/${userSession.id}`}
+              to={`/Account`}
               className="mr-4 text-white font-bold bg-clip-border p-2.5 bg-red-600 border-7 rounded-md">
               <div>{userSession.username}</div>
             </Link>

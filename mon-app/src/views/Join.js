@@ -21,8 +21,6 @@ const Join = () => {
   const [statusCreation, setStatusCreation] = useState(false);
   const [list, setList] = useState([]);
   const [password, setPassword] = useState("");
-  const [joinPassword, setJoinPassword] = useState("");
-  const [gameToJoin, setGameJoin] = useState("");
 
   const fetchGameList = async () => {
     try {
@@ -45,7 +43,6 @@ const Join = () => {
     fetchGameList();
   }, []);
 
-  const [creationStatus, setCreationStatus] = useState(false);
   const navigate = useNavigate();
 
   const GameItem = ({ status, id, infoPlayer }) => {
@@ -59,8 +56,9 @@ const Join = () => {
       }
     };
 
-    const handleSubmit = async () => {
-      console.log('handlesub')
+    const handleSubmit = async (event) => {
+      event.preventDefault()
+      console.log('handlesub', event.target)
       try {
         const idUser = JSON.parse(localStorage.getItem("user_ref_lpMds")).id;
 
@@ -72,18 +70,29 @@ const Join = () => {
 
         const responseUserData = await requestManager(url_server, "POST", {
           private: status,
-          password: joinPassword,
+          password: inputValue,
         });
 
+
+        console.log('responseUserData', responseUserData)
         if (responseUserData.isSuccess) {
+          console.log(responseUserData.response.game_id)
           navigate(`/game/${responseUserData.response.game_id}`);
         } else {
-          console.log(responseUserData)
+            alert(responseUserData.response)
         }
       } catch (e) {
         console.log(e.message);
       }
     };
+
+    const [inputValue, setInputValue] = useState("")
+
+    const updateInputValue = (evt) => {
+      const val = evt.target.value;
+      setInputValue(val);
+    }
+
     return (
       <>
         <li
@@ -100,7 +109,7 @@ const Join = () => {
             {infoPlayer ? infoPlayer.toString().concat("/12") : "0/12"}
           </span>
         </li>
-        <div>join pass: {joinPassword}</div>
+       
         <Modal
           openModal={itemModal}
           setOpenModal={setItemModal}
@@ -109,25 +118,22 @@ const Join = () => {
             "La partie est privé veuillez renseignez le mot de passe!"
           }
           children={
-            <div className="mb-6">
-              <input
-                type="password"
-                id="confirm_password"
-                onChange={(v) => setJoinPassword(v.target.value)}
-                value={joinPassword}
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                placeholder="•••••••••"
-                required
-              />
-              <button
-                onClick={handleSubmit}
-                className="bg-blue-500 text-white px-4 py-2 rounded-r-lg"
-              >
-                Valider
-              </button>
-            </div>
-          }
-        />
+          <form onSubmit={handleSubmit}>
+            <input 
+               type="password"
+               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+               placeholder="•••••••••"
+             
+            onChange={evt => updateInputValue(evt)}/>
+
+            <button
+            type="submit"
+            className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-neutral-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm"
+          >
+            Connecter
+          </button>
+        </form>
+          } />
       </>
     );
   };
@@ -150,7 +156,7 @@ const Join = () => {
       console.log("handleCreation", responseUserData);
       if (responseUserData.isSuccess) {
         navigate(`/game/${responseUserData.response.game_id}`);
-      }
+      } 
     } catch (e) {
       console.log(e.message);
     }
@@ -191,6 +197,7 @@ const Join = () => {
               <div className="min-h-[500px] flex justify-between flex-col">
                 <div>
                   <ul className="w-full flex flex-col gap-2">
+
                     {list.map((item) => {
                       return (
                         <GameItem
@@ -219,52 +226,50 @@ const Join = () => {
                     description=""
                     children={
                       <>
-                        <>
-                          {statusCreation && (
-                            <div className="mb-6">
-                              <label
-                                htmlFor="confirm_password"
-                                className="block mb-2 text-sm font-medium text-gray-900 "
-                              >
-                                Confirm password
-                              </label>
-                              <input
-                                type="password"
-                                id="confirm_password"
-                                onChange={(v) => setPassword(v.target.value)}
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                                placeholder="•••••••••"
-                                required
-                              />
-                            </div>
-                          )}
-                          <div className="flex items-start mb-6">
-                            <div className="flex items-center h-5">
-                              <input
-                                onClick={() =>
-                                  setStatusCreation(!statusCreation)
-                                }
-                                id="remember"
-                                type="checkbox"
-                                value=""
-                                className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 "
-                                required
-                              />
-                            </div>
+                        {statusCreation && (
+                          <div className="mb-6">
                             <label
-                              htmlFor="remember"
-                              className="ms-2 text-sm font-medium"
+                              htmlFor="confirm_password"
+                              className="block mb-2 text-sm font-medium text-gray-900 "
                             >
-                              You want create a private game ?
+                              Confirm password
                             </label>
+                            <input
+                              type="password"
+                              id="confirm_password"
+                              onChange={(v) => setPassword(v.target.value)}
+                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
+                              placeholder="•••••••••"
+                              required
+                            />
                           </div>
-                          <button
-                            onClick={() => handleCreation()}
-                            className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-neutral-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm"
+                        )}
+                        <div className="flex items-start mb-6">
+                          <div className="flex items-center h-5">
+                            <input
+                              onClick={() =>
+                                setStatusCreation(!statusCreation)
+                              }
+                              id="remember"
+                              type="checkbox"
+                              value=""
+                              className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 "
+                              required
+                            />
+                          </div>
+                          <label
+                            htmlFor="remember"
+                            className="ms-2 text-sm font-medium"
                           >
-                            Submit
-                          </button>
-                        </>
+                            You want create a private game ?
+                          </label>
+                        </div>
+                        <button
+                          onClick={() => handleCreation()}
+                          className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-neutral-700 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:w-auto sm:text-sm"
+                        >
+                          Submit
+                        </button>
                       </>
                     }
                   />

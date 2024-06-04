@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import { useGlobalStatesContext } from "../shared/context/GlobalStates";
 import { requestManager } from "../config/requestFunction";
+import FondAccueil from "../assets/FondAccueil.jpg";
+
 
 const AccountFake = () => {
   const { userSession, informationMessage, setInformationMessage } =
@@ -58,67 +61,83 @@ const AccountFake = () => {
     fetchAccountInformation();
   }, []);
   return (
-    <main style={{ paddingTop: "100px" }}>
-      {informationMessage && (
-        <div>
-          <h3>{informationMessage.title}</h3>{" "}
-          <p>{informationMessage.content}</p>
-        </div>
-      )}
+    <main>
+      <div
+        style={{ backgroundImage: `url(${FondAccueil})`, height: "100vh" }}
+        className="flex justify-center items-center flex-col text-white">
+        {/* {informationMessage && (
+          <div>
+            <h3>{informationMessage.title}</h3>{" "}
+            <p>{informationMessage.content}</p>
+          </div>
+        )} */}
 
-      <button
-        onClick={() => {
-          console.log(accountInformation);
-          console.log(Object.keys(accountInformation).length > 0);
-        }}>
-        Console
-      </button>
+        {/* <button
+          onClick={() => {
+            console.log(accountInformation);
+            console.log(Object.keys(accountInformation).length > 0);
+          }}>
+          Console
+        </button> */}
+        <h1 className="font-semibold text-xl pb-4">Mes informations personnelles</h1>
+        <dic className="bg-red-500 p-8 rounded-lg">
 
-      <h1>Mes informations personnelles</h1>
+          {accountInformation && Object.keys(accountInformation).length > 0 && (
+            <div>
+              <ul>
+                {Object.keys(accountInformation).map((key, index) => {
+                  if (key !== "_id")
+                    return (
+                      <li
+                      className="text-xl"
+                        key={index}
+                        onClick={() => {
+                          setModaleUpdate({
+                            key: key,
+                            value: accountInformation[key],
+                          });
+                        }}>
+                          {}
+                          {key} : {accountInformation[key]} <button onClick={() =>  setModaleUpdate({
+                            key: key,
+                            value: accountInformation[key],
+                          })}>Changer</button>
+                          </li>
+                    );
+                })}
+              </ul>
+            </div>
+          )}
 
-      {accountInformation && Object.keys(accountInformation).length > 0 && (
-        <div>
-          <ul>
-            {Object.keys(accountInformation).map((key, index) => {
-              if (key !== "_id")
-                return (
-                  <li
-                    key={index}
-                    onClick={() => {
-                      setModaleUpdate({
-                        key: key,
-                        value: accountInformation[key],
-                      });
-                    }}>
-                    {accountInformation[key]}
-                  </li>
-                );
-            })}
-          </ul>
-        </div>
-      )}
-
-      {modaleUpdate && (
-        <div>
-          <form onSubmit={(e) => handleSubmitUpdate(e)}>
-            <label htmlFor="update-input">
-              Modifier votre {modaleUpdate.key}
-            </label>
-            <input
-              onChange={(e) => {
-                setDataToUpdate({
-                  id: accountInformation._id,
-                  [`${modaleUpdate.key}`]: e.target.value.toLowerCase(),
-                });
-              }}
-              type="text"
-              name="update-input"
-              placeholder={modaleUpdate.value}
-            />
-            <button type="submit">Envoyer</button>
-          </form>
-        </div>
-      )}
+          {modaleUpdate && (
+            <div>
+              <form className="pt-4" onSubmit={(e) => handleSubmitUpdate(e)}>
+                <label htmlFor="update-input">
+                  Modifier votre {modaleUpdate.key}
+                </label>
+                <input
+                  onChange={(e) => {
+                    setDataToUpdate({
+                      id: accountInformation._id,
+                      [`${modaleUpdate.key}`]: e.target.value.toLowerCase(),
+                    });
+                  }}
+                  type="text"
+                  name="update-input"
+                  className="mx-4"
+                  placeholder={modaleUpdate.value}
+                />
+                 <button type="submit">Envoyer</button>
+              </form>
+            </div>
+          )}
+        </dic>
+        <Link
+              to={`/join`}
+              className="mt-4 text-white font-bold bg-clip-border p-2.5 bg-red-600 border-7 rounded-md">
+              <button> Retour </button>
+            </Link>
+      </div>
     </main>
   );
 };

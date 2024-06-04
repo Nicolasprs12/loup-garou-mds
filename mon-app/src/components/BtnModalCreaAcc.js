@@ -42,7 +42,7 @@ function BtnModalCreaAcc({ setOpenModal, openModal }) {
 
       if (responseSignup["isSuccess"]) {
         // Fermer le modal après la soumission du formulaire
-        navigate(`/account/${responseSignup["data"]["id"]}`);
+        navigate(`/join}`);
         setUser(
           responseSignup["data"]["token"],
           responseSignup["data"]["id"],
