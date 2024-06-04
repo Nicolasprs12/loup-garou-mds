@@ -52,13 +52,12 @@ const Join = () => {
       if (status === "privé") {
         setItemModal(true);
       } else {
-        handleSubmit();
+        handleSubmit(undefined);
       }
     };
 
     const handleSubmit = async (event) => {
-      event.preventDefault()
-      console.log('handlesub', event.target)
+      event?.preventDefault()
       try {
         const idUser = JSON.parse(localStorage.getItem("user_ref_lpMds")).id;
 
@@ -71,6 +70,7 @@ const Join = () => {
         const responseUserData = await requestManager(url_server, "POST", {
           private: status,
           password: inputValue,
+          idUser: userSession.id
         });
 
 

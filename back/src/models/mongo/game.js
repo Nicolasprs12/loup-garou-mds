@@ -31,6 +31,13 @@ const gameSchema = new mongoose.Schema({
   },
 });
 
+
+gameSchema.methods.compareUsers = function (user, cb) {
+  console.log('user test: ', user)
+  // TODO: renvoie true ou false si user est trouvé
+  cb(null, true)
+};
+
 const Game = mongoose.model("Game", gameSchema);
 
 module.exports = Game;

@@ -32,10 +32,17 @@ const create = (req, res) => {
 };
 
 const join = (req, res) => {
-  const { idUser, idGame } = req.params;
-  const { private, password } = req.body;
-  const isPrivate = private === true;
+  const { idGame } = req.params;
+  const { private, password, idUser } = req.body;
+  const isPrivate = private === 'privé';
 
+
+  console.log({
+    idGame,
+idUser,
+    private,
+    password
+  })
   try {
     // si la partie est privé et ue aucun mdp n'a été fourni on retourne une erreur
     if (isPrivate && !password) {
@@ -50,6 +57,15 @@ const join = (req, res) => {
       { $addToSet: { id_users: idUser } }
     )
       .then((response) => {
+          if(response) {
+
+            // todo : si isMatch retourner une erreur
+            response.compareUsers(idUser, (err, isMatch) => {
+              console.log('callback compareUsers: ', {
+                err, isMatch
+              })
+            })
+          }
         if (response === null) {
           res.status(config.HTTP.RESPONSE.OK.CODE).json({
             isSuccess: false,
@@ -73,6 +89,8 @@ const join = (req, res) => {
       .status(config.HTTP.RESPONSE.INTERNAL_ERROR.CODE)
       .json({ isSuccess: false, response: e.message });
   }
+
+
 };
 
 const get = (req, res) => {
