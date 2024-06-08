@@ -54,6 +54,7 @@ const signUp = async (req, res) => {
 
 const signIn = async (req, res) => {
   const { username, password } = req.body;
+  console.log(req.body);
   // vérification que les params sont bien renseigné
   if (!username || !password) {
     res.json({
